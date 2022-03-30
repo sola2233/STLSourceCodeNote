@@ -32,12 +32,15 @@ public:
 int main() {
     vector<int> ia = {0, 1, 2, 3, 4};
     vector<int>::iterator it = sil::find(ia.begin(), ia.end(), 4);
-    if (it!= ia.end()) {
+    if (it != ia.end())
+    {
         cout << "Found value." << endl;
     }
-    else {
+    else
+    {
         cout << "Not found." << endl;
     }
 
     sil::for_each(ia.begin(), ia.end(), MyPrint<int>());
+    cout << endl;
 }

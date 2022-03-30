@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *
  * Copyright (c) 1994
  * Hewlett-Packard Company
@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_INTERNAL_CONSTRUCT_H
 #define __SGI_STL_INTERNAL_CONSTRUCT_H
 
-#include <new.h> // Ê¹ÓÃplacement new
+#include <new.h> // ä½¿ç”¨placement new
 
 __STL_BEGIN_NAMESPACE
 
@@ -45,7 +45,7 @@ __STL_BEGIN_NAMESPACE
 
 template <class _T1, class _T2>
 inline void _Construct(_T1* __p, const _T2& __value) {
-  new ((void*) __p) _T1(__value);  // placement new; »½ÆğT1::T1(value)
+  new ((void*) __p) _T1(__value);  // placement new; å”¤èµ·T1::T1(value)
 }
 
 template <class _T1>
@@ -54,14 +54,15 @@ inline void _Construct(_T1* __p) {
 }
 
 
-// µÚÒ»¸ö°æ±¾£¬½ÓÊÜÒ»¸ö²ÎÊı
+// ç¬¬ä¸€ä¸ªç‰ˆæœ¬ï¼Œæ¥å—ä¸€ä¸ªå‚æ•°
 template <class _Tp>
 inline void _Destroy(_Tp* __pointer) {
-  __pointer->~_Tp();  // µ÷ÓÃdtor ~T()
+  __pointer->~_Tp();  // è°ƒç”¨dtor ~T()
 }
 
-
-// Èç¹ûÔªËØvalue type ÓĞ non-trivial destructor
+
+
+// å¦‚æœå…ƒç´ value type æœ‰ non-trivial destructor
 template <class _ForwardIterator>
 void
 __destroy_aux(_ForwardIterator __first, _ForwardIterator __last, __false_type)
@@ -70,12 +71,12 @@ __destroy_aux(_ForwardIterator __first, _ForwardIterator __last, __false_type)
     destroy(&*__first);
 }
 
-// Èç¹ûÔªËØvalue type ÓĞ trivial destructor
+// å¦‚æœå…ƒç´ value type æœ‰ trivial destructor
 template <class _ForwardIterator> 
 inline void __destroy_aux(_ForwardIterator, _ForwardIterator, __true_type) {}
 
 
-// ÅĞ¶ÏÔªËØvalue typeÊÇ·ñÓĞtrivial destructor
+// åˆ¤æ–­å…ƒç´ value typeæ˜¯å¦æœ‰trivial destructor
 template <class _ForwardIterator, class _Tp>
 inline void 
 __destroy(_ForwardIterator __first, _ForwardIterator __last, _Tp*)
@@ -86,13 +87,13 @@ __destroy(_ForwardIterator __first, _ForwardIterator __last, _Tp*)
 }
 
 
-// µÚ¶ş¸ö°æ±¾£¬½ÓÊÜÁ½¸öµü´úÆ÷£¬º¯ÊıÉè·¨ÕÒ³öÔªËØÀà±ğ£¬½ø¶øÀûÓÃ __type_traits<>Ê¹ÓÃ×î¼Ñ´ëÊ©
+// ç¬¬äºŒä¸ªç‰ˆæœ¬ï¼Œæ¥å—ä¸¤ä¸ªè¿­ä»£å™¨ï¼Œå‡½æ•°è®¾æ³•æ‰¾å‡ºå…ƒç´ ç±»åˆ«ï¼Œè¿›è€Œåˆ©ç”¨ __type_traits<>ä½¿ç”¨æœ€ä½³æªæ–½
 template <class _ForwardIterator>
 inline void _Destroy(_ForwardIterator __first, _ForwardIterator __last) {
   __destroy(__first, __last, __VALUE_TYPE(__first));
 }
 
-// destroy()ÌØ»¯°æ
+// destroy()ç‰¹åŒ–ç‰ˆ
 inline void _Destroy(char*, char*) {}
 inline void _Destroy(int*, int*) {}
 inline void _Destroy(long*, long*) {}

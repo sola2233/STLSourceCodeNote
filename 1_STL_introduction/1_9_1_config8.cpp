@@ -30,5 +30,5 @@ int main() {
 
     vec<int> x;
     vec<int>::iterator ite;
-    x.insert(ite, ia, ia + 5);
+    x.insert(ite, ia, ia + 5); // insert()
 }

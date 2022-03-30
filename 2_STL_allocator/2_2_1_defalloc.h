@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *
  * Copyright (c) 1994
  * Hewlett-Packard Company
@@ -78,7 +78,7 @@ public:
 };
 
 
-// ÌØ»¯°æ±¾£¨Specialization£©£¬ÎªÊ²Ã´ÎÞÐè¼ÓÉÏtemplate<>
+// ç‰¹åŒ–ç‰ˆæœ¬ï¼ˆSpecializationï¼‰ï¼Œä¸ºä»€ä¹ˆæ— éœ€åŠ ä¸Štemplate<>
 class allocator<void> {
 public:
     typedef void* pointer;

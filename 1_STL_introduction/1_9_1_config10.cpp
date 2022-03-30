@@ -21,6 +21,7 @@ public:
     }
 };
 
+// 根据前一个参数值 T，设定下一个参数 Sequence 的默认值为 deque<T>
 template <class T, class Sequence = deque<T>>
 class stack {
 public:
@@ -32,5 +33,6 @@ private:
 };
 
 int main() {
-    stack<int> x;
+    stack<int> x;   // deque()
+                    // stack
 }

@@ -16,7 +16,8 @@ int main() {
     int i;
 
     vector<int, JJ::allocator<int> > iv(ia, ia + 5);
-    for (i = 0; i < iv.size(); i++) {
+    for (i = 0; i < iv.size(); i++)
+    {
         cout << iv[i] << ' ';
     }
     cout << endl;

@@ -6,7 +6,8 @@
 
 // 测试类模板是否使用非类型模板参数（non-type template parameters） 。
 // 当以类型 (type)作为模板参数的时候，代码中未决定的是类型；
-// 当以一般的数字(non-type)作为模板参数的时候，代码中待定的内容便是某些数值。使用者这种模板必须要显示指定数值，模板才能实例化。
+// 当以一般的数字(non-type)作为模板参数的时候，代码中待定的内容便是某些数值。
+// 使用者这种模板必须要显示指定数值，模板才能实例化。
 // 通常它们只能是常数整数（constant integral values ）包括枚举，或者是指向外部链接的指针。
 // 不能把float，class-type类型的对象，内部链接(internal linkage )对象,作为非类型模板参数。
 
@@ -31,7 +32,7 @@ struct __deque_iterator {
 }; 
 
 // BufSiz为非类型参数
-template <class T, class Alloc=alloc, size_t BufSiz=0>
+template <class T, class Alloc = alloc, size_t BufSiz = 0>
 class deque {
 public:
     typedef __deque_iterator<T, T &, T *, BufSiz> iterator;

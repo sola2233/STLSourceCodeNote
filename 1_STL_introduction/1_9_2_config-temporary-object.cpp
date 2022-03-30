@@ -24,4 +24,5 @@ int main() {
     
     // print<int>() 是一个匿名对象，不是函数调用
     for_each(iv.begin(), iv.end(), print<int>());
+    cout << endl;
 }

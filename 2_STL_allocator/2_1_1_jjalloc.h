@@ -10,12 +10,12 @@
 #include <iostream> // for cerr
 using namespace std;
 
-// 在全局命名空间中有一个自带的、隐藏的operator new专门用来分配内存。
-// 默认情况下编译器会将new这个关键字翻译成这个operator new和相应的构造函数。
-// 但在有的情况下，用户自己会在类中重载operator new，这种情况下，编译器默认会使用类中重载的operator new
+// 在全局命名空间中有一个自带的、隐藏的 operator new 专门用来分配内存。
+// 默认情况下编译器会将 new 这个关键字翻译成这个 operator new 和相应的构造函数。
+// 但在有的情况下，用户自己会在类中重载 operator new，这种情况下，编译器默认会使用类中重载的 operator new
 // （本质上因为编译器会从命名空间由内而外查找自己想要的函数，选用第一个）。
-// 如果我们想要继续使用默认的operator new，就应该写成::new 字面意思就是调用最外层命名空间中的operator new
-// 值得一提的是最外层的（也是默认的）operator new也是可以被重载的。通过这种方式我们可以改变所有new的部分行为。
+// 如果我们想要继续使用默认的 operator new，就应该写成 ::new 字面意思就是调用最外层命名空间中的 operator new
+// 值得一提的是最外层的（也是默认的）operator new 也是可以被重载的。通过这种方式我们可以改变所有 new 的部分行为。
 
 namespace JJ {
     // 配置空间，足以储存 n个 T对象。第二自变量是个提示。
@@ -67,7 +67,7 @@ namespace JJ {
         };
 
         // hint used for locality. ref. [Austern], p189
-        pointer allocate(size_type n, const void* hint=0) {
+        pointer allocate(size_type n, const void* hint = 0) {
             return _allocate((difference_type)n, (pointer)0);
         }
 

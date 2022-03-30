@@ -18,8 +18,9 @@ public:
 };
 
 // 需要加上template<>，否则编译出错，进行内存配置
+// 为 static data members 进行定义（配置内存），并设初值
 template<> int TestClass<int>::_data = 1;
-template<> int TestClass<char>::_data = 1;
+template<> int TestClass<char>::_data = 2;
 
 int main() {
 

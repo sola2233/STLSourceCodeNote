@@ -32,6 +32,7 @@
 #define __SGI_STL_INTERNAL_CONSTRUCT_H
 
 #include <new.h>
+// #include <new>
 
 __STL_BEGIN_NAMESPACE
 

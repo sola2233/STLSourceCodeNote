@@ -18,7 +18,7 @@ class alloc {
 };
 
 // BufSiz为非类型参数
-template <class T, class Alloc=alloc, size_t BufSiz=0>
+template <class T, class Alloc = alloc, size_t BufSiz = 0>
 class deque {
 public:
     deque() {
@@ -26,7 +26,7 @@ public:
     }
 };
 
-//以㆘宣告如果不出现，GCC也可以通过。如果出现，GCC也可以通过。这㆒点和
+// 以㆘宣告如果不出现，GCC也可以通过。如果出现，GCC也可以通过。这㆒点和
 // C++ Primer 3/e p.834的说法有出入。书㆖说㆒定要有这些前置宣告。
 template <class T, class Sequence>
 class stack;
@@ -64,6 +64,7 @@ private:
     Sequence c;
 };
 
+// 前面声明的实现
 template <class T, class Sequence>
 bool operator==(const stack<T, Sequence> &x, 
                 const stack<T, Sequence> &y) {

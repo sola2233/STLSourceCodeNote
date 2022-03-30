@@ -12,7 +12,7 @@
 using namespace std;
 
 class INT {
-    friend ostream &operator<<(ostream &os, const INT &i);
+    friend ostream& operator<<(ostream& os, const INT& i);
 
 public:
     INT(int i) : m_i(i){};
@@ -68,9 +68,9 @@ ostream& operator<< (ostream& os, const INT& i) {
 
 int main() {
     INT I(5);
-    cout << I++;
-    cout << ++I;
-    cout << I--;
-    cout << --I;
-    cout << *I;
+    cout << I++ << endl;
+    cout << ++I << endl;
+    cout << I-- << endl;
+    cout << --I << endl;
+    cout << *I << endl;;
 }
