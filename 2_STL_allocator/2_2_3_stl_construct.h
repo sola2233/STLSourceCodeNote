@@ -1,4 +1,4 @@
-﻿/*
+/*
  *
  * Copyright (c) 1994
  * Hewlett-Packard Company
@@ -31,100 +31,57 @@
 #ifndef __SGI_STL_INTERNAL_CONSTRUCT_H
 #define __SGI_STL_INTERNAL_CONSTRUCT_H
 
-#include <new.h> // 使用placement new
+#include <new.h>
 
 __STL_BEGIN_NAMESPACE
 
-// construct and destroy.  These functions are not part of the C++ standard,
-// and are provided for backward compatibility with the HP STL.  We also
-// provide internal names _Construct and _Destroy that can be used within
-// the library, so that standard-conforming pieces don't have to rely on
-// non-standard extensions.
-
-// Internal names
-
-template <class _T1, class _T2>
-inline void _Construct(_T1* __p, const _T2& __value) {
-  new ((void*) __p) _T1(__value);  // placement new; 唤起T1::T1(value)
-}
-
-template <class _T1>
-inline void _Construct(_T1* __p) {
-  new ((void*) __p) _T1();
-}
-
-
-// 第一个版本，接受一个参数
-template <class _Tp>
-inline void _Destroy(_Tp* __pointer) {
-  __pointer->~_Tp();  // 调用dtor ~T()
-}
-
-
-
-// 如果元素value type 有 non-trivial destructor
-template <class _ForwardIterator>
-void
-__destroy_aux(_ForwardIterator __first, _ForwardIterator __last, __false_type)
+template <class T1, class T2>
+inline void construct(T1 *p, const T2 &value)
 {
-  for ( ; __first != __last; ++__first)
-    destroy(&*__first);
+	// placement new，调用 T1::T1(value)
+	new (p) T1(value);
 }
 
-// 如果元素value type 有 trivial destructor
-template <class _ForwardIterator> 
-inline void __destroy_aux(_ForwardIterator, _ForwardIterator, __true_type) {}
-
-
-// 判断元素value type是否有trivial destructor
-template <class _ForwardIterator, class _Tp>
-inline void 
-__destroy(_ForwardIterator __first, _ForwardIterator __last, _Tp*)
+// destory 第一个版本，接受一个指针
+template <class T>
+inline void destroy(T *pointer)
 {
-  typedef typename __type_traits<_Tp>::has_trivial_destructor
-          _Trivial_destructor;
-  __destroy_aux(__first, __last, _Trivial_destructor());
+	pointer->~T();
+}
+
+// dsetory 第二版本，接收两个迭代器。此函数设法找出元素的数值型别
+// 进而利用 __type_traits<> 求取最适当措施
+template <class ForwardIterator>
+inline void destroy(ForwardIterator first, ForwardIterator last)
+{
+	__destroy(first, last, value_type(first));
+}
+
+// 判断元素的数值型别(value type) 是否有 trivial destructor
+template <class ForwardIterator, class T>
+inline void __destroy(ForwardIterator first, ForwardIterator last, T *)
+{
+	typedef typename __type_traits<T>::has_trivial_destructor trivial_destructor;
+	__destroy_aux(first, last, trivial_destructor());
 }
 
 
-// 第二个版本，接受两个迭代器，函数设法找出元素类别，进而利用 __type_traits<>使用最佳措施
-template <class _ForwardIterator>
-inline void _Destroy(_ForwardIterator __first, _ForwardIterator __last) {
-  __destroy(__first, __last, __VALUE_TYPE(__first));
+// 如果元素的数值型别(value type) 有 non-trivial destructor
+template <class ForwardIterator>
+inline void
+__destroy_aux(ForwardIterator first, ForwardIterator last, __false_type)
+{
+	for (; first < last; ++first)
+		destroy(&*first);
 }
 
-// destroy()特化版
-inline void _Destroy(char*, char*) {}
-inline void _Destroy(int*, int*) {}
-inline void _Destroy(long*, long*) {}
-inline void _Destroy(float*, float*) {}
-inline void _Destroy(double*, double*) {}
-#ifdef __STL_HAS_WCHAR_T
-inline void _Destroy(wchar_t*, wchar_t*) {}
-#endif /* __STL_HAS_WCHAR_T */
+// 如果元素的数值型别(value type) 有 trivial destructor
+template <class ForwardIterator>
+inline void __destroy_aux(ForwardIterator, ForwardIterator, __true_type) {}
 
-// --------------------------------------------------
-// Old names from the HP STL.
-
-template <class _T1, class _T2>
-inline void construct(_T1* __p, const _T2& __value) {
-  _Construct(__p, __value);
-}
-
-template <class _T1>
-inline void construct(_T1* __p) {
-  _Construct(__p);
-}
-
-template <class _Tp>
-inline void destroy(_Tp* __pointer) {
-  _Destroy(__pointer);
-}
-
-template <class _ForwardIterator>
-inline void destroy(_ForwardIterator __first, _ForwardIterator __last) {
-  _Destroy(__first, __last);
-}
+// 以下是 destroy 第二版针对迭代器为 char* 和 wchar_t* 的特化版
+inline void destroy(char *, char *) {}
+inline void destroy(wchar_t *, wchar_t *) {}
 
 __STL_END_NAMESPACE
 
