@@ -31,6 +31,8 @@ STL 标准规定配置器定义于 [memory](2_2_2_memory) 中，SGI 的 memory �
    - 最差情况下会调用`construct()`
    - 最佳情况下会使用C标准函数`memmove()`直接进行内存数据的移动
 
+[stl内存池中使用union节省空间的问题](https://segmentfault.com/q/1010000006209284)
+
 ## 2.3 内存基本处理工具
 
 [stl_uninitialized.h](2_3_1_stl_uninitialized.h)：包含了三个全局函数，作用都是在某个内存区块上构造元素。每个函数首先都会萃取迭代器first的value type，判断该型别是否为POD型别，然后令编译器调用合适的处理函数。对POD型别采用最有效率的初值填写收发，对 non-POD 型别采取最保险安全的做法
