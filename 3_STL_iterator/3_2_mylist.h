@@ -1,15 +1,19 @@
 // file: 3mylist.h
+// 设计一个简单的 list
 #include <iostream>
 
-// 先声明
+// 链表节点声明
 template <typename T>
 class ListItem;
 
+// 链表定义
 template <typename T>
 class List {
 // 定义public以供访问
 public:
+    // 头插法
     void insert_front(T value);
+    // 尾插法，由于是单向链表，需要先找到最后一个节点，o(n)
     void insert_end(T value);
     void display(std::ostream &os = std::cout) const;
     ListItem<T> * front() {
@@ -82,5 +86,5 @@ public:
 
 private:
     T _value;
-    ListItem *_next;
+    ListItem *_next;    // 单项链表（single linked list）
 };

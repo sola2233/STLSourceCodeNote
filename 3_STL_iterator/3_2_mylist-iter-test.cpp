@@ -1,10 +1,11 @@
 // file: 3mylist-iter-test.cpp
+// 测试 list 和 迭代器
 #include "3_2_algorithm.h"
 #include "3_2_mylist-iter.h"
 #include "3_2_mylist.h"
 using namespace std;
 
-//为了完成一个针对 List而设计的迭代器，我们无可避免曝露了太多 List细节：
+// 为了完成一个针对 List而设计的迭代器，我们无可避免曝露了太多 List细节：
 // 在 main()为了制作 begin和 end两个迭代器，我们曝露了 ListItem；
 // 在 ListIter class 为了达成 operator++的目的，我们曝露了 ListItem的操作函式 next()。
 // 如果不是为了迭代器，ListItem 原本应该完全隐藏起来不曝光的。
@@ -13,16 +14,21 @@ using namespace std;
 // 如此一来所有细节反而得以封装起来不被使用者看到。
 // 这正是为什么每一种  STL  容器都提供有专属迭代器的缘故。
 
-// 如果不写全局比较函数，则需要更改find函数判定
-template <typename T> bool operator!=(const ListItem<T>& item, T n) { 
-    return item.value() != n; 
-} 
+// 由于 find 函数内以 *iter != value 来检查元素是否吻合，
+// 本例中 iter 型别是 ListItem<int>，value 型别是 int，
+// 两者之间没有可以使用的 operator!=，必须要重载
+template <typename T>
+bool operator!=(const ListItem<T> &item, T n)
+{
+    return item.value() != n;
+}
 
-int main() {
+int main()
+{
     List<int> mylist;
-    
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i)
+    {
         mylist.insert_front(i);
         mylist.insert_end(i + 2);
     }
@@ -43,4 +49,6 @@ int main() {
         cout << "not found" << endl;
     else
         cout << "found. " << iter->value() << endl;
+
+    return 0;
 }

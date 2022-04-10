@@ -18,9 +18,11 @@ public:
             reset(rhs.release());
         return *this;
     }
+    // 重载解引用运算符
     T& operator*() const {
         return *pointee;
     }
+    // 重载成员访问运算符
     T* operator->() const {
         return pointee;
     }
