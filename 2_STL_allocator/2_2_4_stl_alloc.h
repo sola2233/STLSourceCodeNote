@@ -344,9 +344,10 @@ private:
         return (((bytes) + __ALIGN-1) & ~(__ALIGN - 1));
   }
 __PRIVATE:
-  union obj {           // free-lists 的节点构造
-        union obj * free_list_link;
-        char client_data[1];    /* The client sees this.        */
+  // free-lists 的节点构造，用 union，节约空间，不需要额外保存一个指向下一个节点的指针
+  union obj {
+        union obj * free_list_link; // 作为空闲链表上的节点时，指向下一个空闲节点
+        char client_data[1];        // 分配给用户之后，表现为一个区块的起始位置，即一块分配给用户的空间
   };
 private:
 # ifdef __SUNPRO_CC

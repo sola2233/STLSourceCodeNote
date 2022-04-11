@@ -224,8 +224,9 @@ inline ForwardIterator __uninitialized_fill_n(ForwardIterator first, Size n,
 template <class ForwardIterator, class Size, class T>
 inline ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n,
                                             const T& x) {
+  // value_type() 可以很方便地获取迭代器的类型                                            
   return __uninitialized_fill_n(first, n, x, value_type(first));
-  // 以上，利用 value_type() 取出 first 的 value type
+  // 以上，利用 value_type() 取出 first 的 value type，该函数见 3_6_stl_iterator.h
 }
 
 // Copies [first1, last1) into [result, result + (last1 - first1)), and
