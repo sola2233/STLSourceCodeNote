@@ -1,4 +1,5 @@
 // file: 4queue-test.cpp
+// 测试用 list 作为 queue 的底层容器
 
 #include <queue>
 #include <list>
@@ -7,7 +8,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     queue<int, list<int>> iqueue;
     iqueue.push(1);
     iqueue.push(3);
@@ -24,4 +26,6 @@ int main() {
     iqueue.pop();
     cout << iqueue.front() << endl;
     cout << iqueue.size() << endl;
+
+    return 0;
 }

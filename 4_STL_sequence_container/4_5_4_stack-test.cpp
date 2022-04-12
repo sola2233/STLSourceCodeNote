@@ -1,4 +1,5 @@
 // file: 4stack-test.cpp
+// 使用 list 作为 stack 的底层容器
 
 #include <stack>
 #include <list>
@@ -7,7 +8,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     stack<int, list<int>> istack;
     istack.push(1);
     istack.push(3);
@@ -24,4 +26,6 @@ int main() {
     istack.pop();
     cout << istack.top() << endl;
     cout << istack.size() << endl;
+
+    return 0;
 }

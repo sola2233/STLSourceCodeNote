@@ -31,206 +31,102 @@
 #ifndef __SGI_STL_INTERNAL_QUEUE_H
 #define __SGI_STL_INTERNAL_QUEUE_H
 
-#include <sequence_concepts.h>
-
 __STL_BEGIN_NAMESPACE
 
-// Forward declarations of operators < and ==, needed for friend declaration.
-
-template <class _Tp, 
-          class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque<_Tp>) >
-class queue;
-
-template <class _Tp, class _Seq>
-inline bool operator==(const queue<_Tp, _Seq>&, const queue<_Tp, _Seq>&);
-
-template <class _Tp, class _Seq>
-inline bool operator<(const queue<_Tp, _Seq>&, const queue<_Tp, _Seq>&);
-
-
-template <class _Tp, class _Sequence>
+#ifndef __STL_LIMITED_DEFAULT_TEMPLATES
+template <class T, class Sequence = deque<T> >
+#else
+template <class T, class Sequence>
+#endif
 class queue {
-
-  // requirements:
-
-  __STL_CLASS_REQUIRES(_Tp, _Assignable);
-  __STL_CLASS_REQUIRES(_Sequence, _FrontInsertionSequence);
-  __STL_CLASS_REQUIRES(_Sequence, _BackInsertionSequence);
-  typedef typename _Sequence::value_type _Sequence_value_type;
-  __STL_CLASS_REQUIRES_SAME_TYPE(_Tp, _Sequence_value_type);
-
-
-#ifdef __STL_MEMBER_TEMPLATES 
-  template <class _Tp1, class _Seq1>
-  friend bool operator== (const queue<_Tp1, _Seq1>&,
-                          const queue<_Tp1, _Seq1>&);
-  template <class _Tp1, class _Seq1>
-  friend bool operator< (const queue<_Tp1, _Seq1>&,
-                         const queue<_Tp1, _Seq1>&);
-#else /* __STL_MEMBER_TEMPLATES */
-  friend bool __STD_QUALIFIER
-  operator== __STL_NULL_TMPL_ARGS (const queue&, const queue&);
-  friend bool __STD_QUALIFIER
-  operator<  __STL_NULL_TMPL_ARGS (const queue&, const queue&);
-#endif /* __STL_MEMBER_TEMPLATES */
-
+  // 以下的 __STL_NULL_TMPL_ARGS 会展开为 <>，见 1.9.1 节
+  friend bool operator== __STL_NULL_TMPL_ARGS (const queue& x, const queue& y);
+  friend bool operator< __STL_NULL_TMPL_ARGS (const queue& x, const queue& y);
 public:
-  typedef typename _Sequence::value_type      value_type;
-  typedef typename _Sequence::size_type       size_type;
-  typedef          _Sequence                  container_type;
-
-  typedef typename _Sequence::reference       reference;
-  typedef typename _Sequence::const_reference const_reference;
+  typedef typename Sequence::value_type value_type;
+  typedef typename Sequence::size_type size_type;
+  typedef typename Sequence::reference reference;
+  typedef typename Sequence::const_reference const_reference;
 protected:
-  _Sequence c; // 底层容器
+  Sequence c;   // 底层容器
 public:
-  queue() : c() {}
-  explicit queue(const _Sequence& __c) : c(__c) {}
-
-  // 完全利用底层容器完成操作
+  // 以下完全利用 Sequence c 的操作，完成 queue 的操作
   bool empty() const { return c.empty(); }
   size_type size() const { return c.size(); }
   reference front() { return c.front(); }
   const_reference front() const { return c.front(); }
   reference back() { return c.back(); }
   const_reference back() const { return c.back(); }
-  // 尾进头出
-  void push(const value_type& __x) { c.push_back(__x); }
+  // deque 是两头可进出，queue 是末端进、前端出（所以先进者先出）
+  void push(const value_type& x) { c.push_back(x); }
   void pop() { c.pop_front(); }
 };
 
-template <class _Tp, class _Sequence>
-bool 
-operator==(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return __x.c == __y.c;
+template <class T, class Sequence>
+bool operator==(const queue<T, Sequence>& x, const queue<T, Sequence>& y) {
+  return x.c == y.c;
 }
 
-template <class _Tp, class _Sequence>
-bool
-operator<(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return __x.c < __y.c;
+template <class T, class Sequence>
+bool operator<(const queue<T, Sequence>& x, const queue<T, Sequence>& y) {
+  return x.c < y.c;
 }
 
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _Tp, class _Sequence>
-bool
-operator!=(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return !(__x == __y);
-}
-
-template <class _Tp, class _Sequence>
-bool 
-operator>(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return __y < __x;
-}
-
-template <class _Tp, class _Sequence>
-bool 
-operator<=(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return !(__y < __x);
-}
-
-template <class _Tp, class _Sequence>
-bool 
-operator>=(const queue<_Tp, _Sequence>& __x, const queue<_Tp, _Sequence>& __y)
-{
-  return !(__x < __y);
-}
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-template <class _Tp, 
-          class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(vector<_Tp>),
-          class _Compare
-          __STL_DEPENDENT_DEFAULT_TMPL(less<typename _Sequence::value_type>) >
-class priority_queue {
-
-  // requirements:
-
-  __STL_CLASS_REQUIRES(_Tp, _Assignable);
-  __STL_CLASS_REQUIRES(_Sequence, _Sequence);
-  __STL_CLASS_REQUIRES(_Sequence, _RandomAccessContainer);
-  typedef typename _Sequence::value_type _Sequence_value_type;
-  __STL_CLASS_REQUIRES_SAME_TYPE(_Tp, _Sequence_value_type);
-  __STL_CLASS_BINARY_FUNCTION_CHECK(_Compare, bool, _Tp, _Tp);
-
+// 优先级队列结构
+#ifndef __STL_LIMITED_DEFAULT_TEMPLATES
+template <class T, class Sequence = vector<T>, 
+          class Compare = less<typename Sequence::value_type> >
+#else
+template <class T, class Sequence, class Compare>
+#endif
+class  priority_queue {
 public:
-  typedef typename _Sequence::value_type      value_type;
-  typedef typename _Sequence::size_type       size_type;
-  typedef          _Sequence                  container_type;
-
-  typedef typename _Sequence::reference       reference;
-  typedef typename _Sequence::const_reference const_reference;
+  typedef typename Sequence::value_type value_type;
+  typedef typename Sequence::size_type size_type;
+  typedef typename Sequence::reference reference;
+  typedef typename Sequence::const_reference const_reference;
 protected:
-  _Sequence c;   // 底层容器
-  _Compare comp; // 元素大小比较标准
+  Sequence c;     // 底层容器，默认是 vector
+  Compare comp;   // 元素大小比较标准，默认是 max-heap
 public:
   priority_queue() : c() {}
-  explicit priority_queue(const _Compare& __x) :  c(), comp(__x) {}
-  priority_queue(const _Compare& __x, const _Sequence& __s) 
-    : c(__s), comp(__x) 
-    { make_heap(c.begin(), c.end(), comp); }
+  explicit priority_queue(const Compare& x) :  c(), comp(x) {}
 
+// 以下用到的 make_heap()、push_heap()、pop_heap() 都是泛型算法
+// 注意，任一个构造函数都立刻于底层容器内产生一个 implicit representation heap
 #ifdef __STL_MEMBER_TEMPLATES
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, _InputIterator __last) 
-    : c(__first, __last) { make_heap(c.begin(), c.end(), comp); }
-
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, 
-                 _InputIterator __last, const _Compare& __x)
-    : c(__first, __last), comp(__x) 
-    { make_heap(c.begin(), c.end(), comp); }
-
-  template <class _InputIterator>
-  priority_queue(_InputIterator __first, _InputIterator __last,
-                 const _Compare& __x, const _Sequence& __s)
-  : c(__s), comp(__x)
-  { 
-    c.insert(c.end(), __first, __last);
-    make_heap(c.begin(), c.end(), comp);
-  }
-
+  template <class InputIterator>
+  priority_queue(InputIterator first, InputIterator last, const Compare& x)
+    : c(first, last), comp(x) { make_heap(c.begin(), c.end(), comp); }
+  template <class InputIterator>
+  priority_queue(InputIterator first, InputIterator last) 
+    : c(first, last) { make_heap(c.begin(), c.end(), comp); }
 #else /* __STL_MEMBER_TEMPLATES */
-  priority_queue(const value_type* __first, const value_type* __last) 
-    : c(__first, __last) { make_heap(c.begin(), c.end(), comp); }
-
-  priority_queue(const value_type* __first, const value_type* __last, 
-                 const _Compare& __x) 
-    : c(__first, __last), comp(__x)
-    { make_heap(c.begin(), c.end(), comp); }
-
-  priority_queue(const value_type* __first, const value_type* __last, 
-                 const _Compare& __x, const _Sequence& __c)
-    : c(__c), comp(__x) 
-  { 
-    c.insert(c.end(), __first, __last);
+  priority_queue(const value_type* first, const value_type* last, 
+                 const Compare& x) : c(first, last), comp(x) {
     make_heap(c.begin(), c.end(), comp);
   }
+  priority_queue(const value_type* first, const value_type* last) 
+    : c(first, last) { make_heap(c.begin(), c.end(), comp); }
 #endif /* __STL_MEMBER_TEMPLATES */
 
   bool empty() const { return c.empty(); }
   size_type size() const { return c.size(); }
   const_reference top() const { return c.front(); }
-  void push(const value_type& __x) {
+  void push(const value_type& x) {
     __STL_TRY {
-      // push_heap是泛型算法，利用底层容器第push_back()将元素推入末端
-      // 再重排heap
-      c.push_back(__x); 
-      push_heap(c.begin(), c.end(), comp);
+      // push_heap 是泛型算法，先利用底层容器的 push_back() 将新元素
+      // 推入末端，再重排 heap，见 C++ Primer p.1195
+      c.push_back(x); 
+      push_heap(c.begin(), c.end(), comp);  // push_heap 是泛型算法
     }
     __STL_UNWIND(c.clear());
   }
   void pop() {
     __STL_TRY {
-      // pop_heap是泛型算法，从heap中取出一个元素，并没有弹出元素
-      // 而是重排heap，之后再以底层容器的pop_back()取得被弹出的元素
+      // push_heap 是泛型算法，从 heap 内取出一个元素。它并不是真正将元素
+      // 弹出，而是重排 heap，然后再以底层容器的 pop_back() 取得被弹出的
+      // 元素。见 C++ Primer p.1195
       pop_heap(c.begin(), c.end(), comp);
       c.pop_back();
     }

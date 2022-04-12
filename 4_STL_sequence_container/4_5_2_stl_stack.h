@@ -31,111 +31,43 @@
 #ifndef __SGI_STL_INTERNAL_STACK_H
 #define __SGI_STL_INTERNAL_STACK_H
 
-#include <sequence_concepts.h>
-
 __STL_BEGIN_NAMESPACE
 
-// Forward declarations of operators == and <, needed for friend declaration.
-
-template <class _Tp, 
-          class _Sequence __STL_DEPENDENT_DEFAULT_TMPL(deque<_Tp>) >
-class stack;
-
-template <class _Tp, class _Seq>
-bool operator==(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y);
-
-template <class _Tp, class _Seq>
-bool operator<(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y);
-
-
-template <class _Tp, class _Sequence>
+#ifndef __STL_LIMITED_DEFAULT_TEMPLATES
+template <class T, class Sequence = deque<T> >
+#else
+template <class T, class Sequence>
+#endif
 class stack {
-
-  // requirements:
-
-  __STL_CLASS_REQUIRES(_Tp, _Assignable);
-  __STL_CLASS_REQUIRES(_Sequence, _BackInsertionSequence);
-  typedef typename _Sequence::value_type _Sequence_value_type;
-  __STL_CLASS_REQUIRES_SAME_TYPE(_Tp, _Sequence_value_type);
-
-
-#ifdef __STL_MEMBER_TEMPLATES
-  template <class _Tp1, class _Seq1>
-  friend bool operator== (const stack<_Tp1, _Seq1>&,
-                          const stack<_Tp1, _Seq1>&);
-  template <class _Tp1, class _Seq1>
-  friend bool operator< (const stack<_Tp1, _Seq1>&,
-                         const stack<_Tp1, _Seq1>&);
-#else /* __STL_MEMBER_TEMPLATES */
-  friend bool __STD_QUALIFIER
-  // 非模板参数会展开为<>
-  operator== __STL_NULL_TMPL_ARGS (const stack&, const stack&);
-  friend bool __STD_QUALIFIER
-  operator< __STL_NULL_TMPL_ARGS (const stack&, const stack&);
-#endif /* __STL_MEMBER_TEMPLATES */
-
+  friend bool operator== __STL_NULL_TMPL_ARGS (const stack&, const stack&);
+  friend bool operator< __STL_NULL_TMPL_ARGS (const stack&, const stack&);
 public:
-  typedef typename _Sequence::value_type      value_type;
-  typedef typename _Sequence::size_type       size_type;
-  typedef          _Sequence                  container_type;
-
-  typedef typename _Sequence::reference       reference;
-  typedef typename _Sequence::const_reference const_reference;
+  typedef typename Sequence::value_type value_type;
+  typedef typename Sequence::size_type size_type;
+  typedef typename Sequence::reference reference;
+  typedef typename Sequence::const_reference const_reference;
 protected:
-  _Sequence c; // 底层容器
+  Sequence c;   // 底层容器，默认为 deque
 public:
-  stack() : c() {}
-  explicit stack(const _Sequence& __s) : c(__s) {}
-
-  // 使用容器完成所有操作，只公开允许的接口
+  // 以下完全利用 Sequence c 操作，完成 stack 的操作
   bool empty() const { return c.empty(); }
   size_type size() const { return c.size(); }
   reference top() { return c.back(); }
   const_reference top() const { return c.back(); }
-  // deque两头可进出，stack是末端进，末端出
-  void push(const value_type& __x) { c.push_back(__x); }
+  // deque 是两头可进出，stack 是末端进，末端出（所以后进者先出）
+  void push(const value_type& x) { c.push_back(x); }
   void pop() { c.pop_back(); }
 };
 
-template <class _Tp, class _Seq>
-bool operator==(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return __x.c == __y.c;
+template <class T, class Sequence>
+bool operator==(const stack<T, Sequence>& x, const stack<T, Sequence>& y) {
+  return x.c == y.c;
 }
 
-template <class _Tp, class _Seq>
-bool operator<(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return __x.c < __y.c;
+template <class T, class Sequence>
+bool operator<(const stack<T, Sequence>& x, const stack<T, Sequence>& y) {
+  return x.c < y.c;
 }
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _Tp, class _Seq>
-bool operator!=(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return !(__x == __y);
-}
-
-template <class _Tp, class _Seq>
-bool operator>(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return __y < __x;
-}
-
-template <class _Tp, class _Seq>
-bool operator<=(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return !(__y < __x);
-}
-
-template <class _Tp, class _Seq>
-bool operator>=(const stack<_Tp,_Seq>& __x, const stack<_Tp,_Seq>& __y)
-{
-  return !(__x < __y);
-}
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
 
 __STL_END_NAMESPACE
 

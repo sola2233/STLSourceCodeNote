@@ -1,4 +1,5 @@
 // file: 4pqueue-test.cpp
+// priority_queue 测试实例
 
 #include <queue>
 #include <iostream>
@@ -6,7 +7,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     // test priority queue
     int ia[9] = {0, 1, 2, 3, 4, 8, 9, 3, 5};
     priority_queue<int> ipq(ia, ia + 9);
@@ -16,7 +18,8 @@ int main() {
         cout << ipq.top() << ' ';
     cout << endl;
 
-    while(!ipq.empty()) {
+    while (!ipq.empty())
+    {
         cout << ipq.top() << ' ';
         ipq.pop();
     }

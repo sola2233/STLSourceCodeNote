@@ -151,3 +151,75 @@ insert_aux(pos, x)：移动插入点 pos 前面或后面的元素
 - 如果 pos 前面元素比较少，在最前端插入一个元素（push_front），前面的元素（除了front）往前移动一个元素位置
 - 如果 pos 后面元素比较少，在最尾端插入一个元素（push_back），后面的元素（除了back）往后移动一个元素位置
 - 在插入点 pos 设定新值 x
+
+## 4.5 stack
+
+stack 不是容器，是一种容器适配器（adapter），默认使用 deque 作为底层容器。
+
+> stack 没有迭代器。
+
+[4_5_2_stl_stack.h](4_5_2_stl_stack.h)：SGI STL 的 stack 源代码，很短。
+
+[4_5_4_stack-test.cpp](4_5_4_stack-test.cpp)：测试使用 list 作为 stack 的底层容器。
+
+## 4.6 queue
+
+[4_6_2_stl_queue](4_6_2_stl_queue.h)：SGI STL 的 queue 源代码，也包括了 priority_queue 的源代码
+
+[4_6_4_queue-test](4_6_4_queue-test.cpp)：测试使用 list 作为 queue 的底层容器。
+
+## 4.7 heap
+
+binary heap （堆）：
+- 结构上：就是一种 complete binary tree（完全二叉树）
+- 堆序性：除了堆顶外，每个节点的优先级都不大于其父节点
+
+因为堆是一种完全二叉树，所以整棵树内没有任何漏洞，可以用一个 array（实际用vector） 来储存所有节点。这种以 array 表述 tree 的方式，称为隐式表述法（implicit representation）
+
+堆顶元素下标为 0，则对于下标为 “i” 的节点：
+- 左子节点位于 “2i + 1” 处，右子节点位于 “2i + 2” 处
+- 父节点位于 “(i - 1) / 2” 处
+- 一共 n 个节点的 heap，最后一个非叶子节点是最后一个节点 “n - 1” 的父节点，下标为 “(n - 2) / 2”
+
+堆顶元素下标为 1，则对于下标为 “i” 的节点：
+- 左子节点位于 “2i” 处，右子节点位于 “2i + 1” 处
+- 父节点位于 “i / 2” 处
+- 一共 n 个节点的 heap，最后一个非叶子节点是最后一个节点 “n” 的父节点，下标为 “n / 2”
+
+[4_7_2_stl_heap.h](4_7_2_stl_heap.h)：STL 里的 heap 算法，都是泛型算法，传入的参数是迭代器
+
+**heap 算法**
+
+push_heap：
+- 先把元素插入底层 vector 的 end() 处（并不是 push_heap调用的，需要用户自行完成）
+- 对 vector 的 end() 元素执行 percolate up（上滤），直到满足堆序性或到达堆顶
+
+pop_heap：
+- 先把堆顶元素放到最后，之前最后的元素，然后现在堆顶没有元素，是个 holeIndex（洞值）
+- 在 holeIndex 的左右子节点中找到较大的那个放到 holeIndex 处，较大的子节点成为新的洞值，即 percolate down（下滤）操作
+- 一直到叶子节点，然后把之前最后的元素赋给它，再执行一次 percolate up（上滤）操作，因为有可能不满足堆序性
+- 实际上上一步是直接调用了 __push_heap，也并没有把之前最后的元素值赋给叶子节点，只是把它当做一个新的 holeIndex，执行了 percolate up
+
+感觉 STL 的 pop_heap 复杂了，可以简化：
+- 先把堆顶元素放到最后，把最后一个元素放到堆顶（相当于交换）
+- 对堆顶元素，执行 percolate down 即可
+
+sort_heap 算法：
+- 执行 pop_heap 把堆顶元素放到最后，调整 heap 结构
+- 堆的范围缩小 1，即 --last
+- 重复前两步直到 heap 内只剩下一个元素
+
+make_heap 算法：将一段现有的数据转化为 heap
+- 从最后一个节点的父节点开始，倒序对每个节点执行 percolate down
+- 直到首节点
+
+> heap 的底层容器设置为 vector 最好，因为可以动态增长。
+
+
+## 4.8 priority_queue
+
+优先级队列，默认是一个 max-heap，底层容器选用 vector。并不是容器，归类为容器适配器。
+
+[4_6_2_stl_queue](4_6_2_stl_queue.h)：priority_queue 的源代码也在 queue 头文件中
+
+[4_8_4_pqueue-test.cpp](4_8_4_pqueue-test.cpp)：测试 priority_queue 使用
