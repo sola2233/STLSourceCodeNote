@@ -223,3 +223,16 @@ make_heap 算法：将一段现有的数据转化为 heap
 [4_6_2_stl_queue](4_6_2_stl_queue.h)：priority_queue 的源代码也在 queue 头文件中
 
 [4_8_4_pqueue-test.cpp](4_8_4_pqueue-test.cpp)：测试 priority_queue 使用
+
+
+## 4.9 slist
+
+slist 和 list 的主要差别在于迭代器前者是单向的 Froward Iterator，后者是双向的 Bidirectional Iterator。
+
+push_front 是头插法，所以元素的次序会和插入的次序相反。
+
+slist 节点和迭代器的设计比 list 复杂，用了继承关系
+
+[4_9_2_stl_slist.h](4_9_2_stl_slist.h)：slist 节点、迭代器和容器结构，前两者用了继承关系，都继承自自己的 base class
+
+[4_9_5_slist-test.cpp](4_9_5_slist-test.cpp)：slist 容器操作测试程序
