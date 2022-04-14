@@ -7,20 +7,25 @@
 using namespace std;
 
 // 仿函数
-struct eqstr {
-    bool operator() (const char* s1, const char* s2) const {
+struct eqstr
+{
+    bool operator()(const char *s1, const char *s2) const
+    {
         return strcmp(s1, s2) == 0;
     }
 };
 
-void lookup(const __gnu_cxx::hash_set<const char*, hash<const char*>, eqstr>& Set, 
-            const char* word) {
+void lookup(const __gnu_cxx::hash_set<const char *, hash<const char *>, eqstr> &Set,
+            const char *word)
+{
     __gnu_cxx::hash_set<const char *, hash<const char *>, eqstr>::const_iterator it = Set.find(word);
     cout << " " << word << ": " << (it != Set.end() ? "present" : "not present") << endl;
 }
 
-int main() {
+int main()
+{
     __gnu_cxx::hash_set<const char *, hash<const char *>, eqstr> Set;
+
     Set.insert("kiwi");
     Set.insert("plum");
     Set.insert("apple");

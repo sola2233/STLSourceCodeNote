@@ -1,12 +1,15 @@
 // file: 5hashtable-test.cpp
 
 // #include <hash_set> // for hashtable
-#include <backward/hashtable.h> // for hashtable in mingw c++
+// #include <backward/hashtable.h> // for hashtable in mingw c++
 #include <iostream>
+#include <bits/hashtable.h>
+#include <unordered_set>
 
 using namespace std;
 
-int main() {
+int main()
+{
     // hash-table
     // <value, key, hash-func, extract-key, equal-key, allocator>
     // note: hash-table has no default ctor
@@ -18,10 +21,12 @@ int main() {
                          equal_to<int>,
                          allocator<int>>
         iht(50, hash<int>(), equal_to<int>()); // 指定50个buckets与函数对象
+    // 指定50个buckets与函数对象
+    __uset_hashtable<int, int, allocator<int>, _Identity<int>, equal_to<int>> iht(50, hash<int>(), equal_to<int>());
 
-    cout << iht.size() << endl; 
-    cout << iht.bucket_count() << endl;      // 第一个质数
-    cout << iht.max_bucket_count() << endl;  // 最后一个质数
+    cout << iht.size() << endl;
+    cout << iht.bucket_count() << endl;     // 第一个质数
+    cout << iht.max_bucket_count() << endl; // 最后一个质数
 
     iht.insert_unique(59);
     iht.insert_unique(63);
@@ -48,23 +53,26 @@ int main() {
     cout << endl;
 
     // 遍历所有buckets，如果节点个数不为0则打印
-    for (int i = 0; i < iht.bucket_count(); ++i) {
+    for (int i = 0; i < iht.bucket_count(); ++i)
+    {
         int n = iht.elems_in_bucket(i);
-        if (n!=0)
+        if (n != 0)
             cout << "bucket[" << i << "] has " << n << " elems." << endl;
     }
 
     // 验证bucket(list)的容量就是buckets vector的大小
-    for (int i = 0; i <= 47; ++i) {
+    for (int i = 0; i <= 47; ++i)
+    {
         iht.insert_equal(i);
     }
     cout << iht.size() << endl;
     cout << iht.bucket_count() << endl;
 
     // 遍历所有buckets，如果节点个数不为0则打印
-    for (int i = 0; i < iht.bucket_count(); ++i) {
+    for (int i = 0; i < iht.bucket_count(); ++i)
+    {
         int n = iht.elems_in_bucket(i);
-        if (n!=0)
+        if (n != 0)
             cout << "bucket[" << i << "] has " << n << " elems." << endl;
     }
 
@@ -78,5 +86,5 @@ int main() {
     cout << iht.count(2) << endl;
 
     // template argument deduction/substitution failed
-    // iht.insert_unique(string("jjhou")); 
+    // iht.insert_unique(string("jjhou"));
 }

@@ -6,7 +6,8 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     map<string, int> simap;
     simap[string("jjhou")] = 1;
     simap[string("jerry")] = 2;
@@ -37,4 +38,6 @@ int main() {
     ite1->second = 9; // 可以修改value
     int number2 = simap[string("jerry")];
     cout << number2 << endl;
+
+    return 0;
 }

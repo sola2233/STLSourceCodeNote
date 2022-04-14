@@ -726,7 +726,7 @@ __insert(base_ptr x_, base_ptr y_, const Value& v) {
   link_type y = (link_type) y_;
   link_type z;
 
-  // key_compare 是键值大小比较准则。是个 function object
+  // key_compare 默认是 less<Key>，比较第一个元素是否小于第二个元素
   if (y == header || x != 0 || key_compare(KeyOfValue()(v), key(y))) {
     z = create_node(v);         // 产生一个新节点
     left(y) = z;                // 这使得当 y 为 header 时，leftmost() == z
@@ -763,7 +763,7 @@ rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_equal(const Value& v)
   while (x != 0) {        // 从根节点开始，往下寻找适当的插入点
     y = x;
     x = key_compare(KeyOfValue()(v), key(x)) ? left(x) : right(x);
-    // 以上，遇 “大” 则往左，遇 “小于或等于” 则往右
+    // key_compare 默认是 less<Key>，比较第一个元素是否小于第二个元素
   }
   return __insert(x, y, v);
   // 以上，x 为新值插入点，y 为插入点之父节点，v 为新值
@@ -781,8 +781,9 @@ rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const Value& v)
   bool comp = true;
   while (x != 0) {          // 从根节点开始，往下寻找适当的插入点
     y = x;
-    comp = key_compare(KeyOfValue()(v), key(x));  // v 键值小于目前节点之键值？
-    x = comp ? left(x) : right(x);    // 遇 “大” 则往左，遇 “小于或等于” 则往右
+    // key_compare 默认是 less<Key>，比较第一个元素是否小于第二个元素
+    comp = key_compare(KeyOfValue()(v), key(x));
+    x = comp ? left(x) : right(x);
   }
   // 离开 while 循环之后，y 所指即插入点之父节点（此时的它必为叶节点）
 
@@ -793,6 +794,7 @@ rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const Value& v)
       // 以上，x 为插入点，y 为插入点之父节点，v 为新值
     else  // 否则（插入点之父节点不为最左节点）
       --j;    // 看不懂这个含义？？？
+  // key_compare 默认是 less<Key>，比较第一个元素是否小于第二个元素
   if (key_compare(key(j.node), KeyOfValue()(v)))
     // 新键值不与既有节点之键值重复，于是以下执行安插操作
     return pair<iterator,bool>(__insert(x, y, v), true);

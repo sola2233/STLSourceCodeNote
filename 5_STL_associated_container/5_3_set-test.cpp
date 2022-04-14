@@ -6,10 +6,13 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     int i;
     int ia[5] = {0, 1, 2, 3, 4};
     set<int> iset{ia, ia + 5};
+
+    cout << less<int>()(1, 2) << endl;
 
     cout << "size=" << iset.size() << endl;
     cout << "3 count =" << iset.count(3) << endl;
@@ -28,7 +31,8 @@ int main() {
 
     set<int>::iterator ite1 = iset.begin();
     set<int>::iterator ite2 = iset.end();
-    for (; ite1 != ite2; ++ite1) {
+    for (; ite1 != ite2; ++ite1)
+    {
         cout << *ite1;
     }
     cout << endl;
@@ -52,4 +56,6 @@ int main() {
         cout << "1 not found" << endl;
 
     // *ite1 = 9; // 修改失败
+
+    return 0;
 }
