@@ -8,12 +8,13 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     int ia[5] = {1, 2, 3, 4, 5};
     vector<int> iv(ia, ia + 5);
     // 0+1+2+3...
     cout << accumulate(iv.begin(), iv.end(), 0) << endl;
-    
+
     // 0-1-2-3
     cout << accumulate(iv.begin(), iv.end(), 0, minus<int>()) << endl;
 
@@ -22,7 +23,8 @@ int main() {
 
     // 10 - 1+1 - 2+2 - ...
     cout << inner_product(iv.begin(), iv.end(), iv.begin(), 10,
-        minus<int>(), plus<int>()) << endl;
+                          minus<int>(), plus<int>())
+         << endl;
 
     // 将迭代器绑定到cout，作为输出用
     ostream_iterator<int> oite(cout, " ");
@@ -50,5 +52,8 @@ int main() {
     int n = 3;
     iota(iv.begin(), iv.end(), n); // 填入n, n+1, n+2
     for (int i = 0; i < iv.size(); ++i)
-        cout << iv[i] << ' ';
+        cout << iv[i] << " ";
+    cout << endl;
+
+    return 0;
 }
