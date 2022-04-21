@@ -21,8 +21,8 @@
 
 STL 标准规定配置器定义于 [memory](2_2_2_memory) 中，SGI 的 memory 包含三个文件：
 1. [stl_alloc.h](2_2_4_stl_alloc.h)：负责内存空间的配置与释放，里面定义了一、二级配置器，配置器名为 alloc
-   - 当分配的内存小于 128kB 时，会直接调用第二级配置器，即 SGI 的 alloc
-   - 当分配的内存大于 128kB 时，会调用第一级配置器，实际上就是 `malloc` 和 `free` 的封装
+   - 当分配的内存小于 128B 时，会直接调用第二级配置器，即 SGI 的 alloc
+   - 当分配的内存大于 128B 时，会调用第一级配置器，实际上就是 `malloc` 和 `free` 的封装
    - 无论 alloc 被定义为第一级配置器还是第二级配置器，SGI 还会为它再包装一个 `simple_alloc` 接口，使配置器能符合 STL 规范
 2. [stl_construct.h](2_2_3_stl_construct.h)：负责对象内容的构造与析构，里面定义了全局函数 `construct()` 和 `destroy()`
    - 全局`construct()`函数实际上调用了`placement new`函数
